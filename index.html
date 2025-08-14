@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hospital Management System</title>
+    <style>
+        :root {
+            --primary-color: #0d6efd;
+            --secondary-color: #6c757d;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .hidden { display: none !important; }
+        .app-container {
+            width: 100%;
+            max-width: 1200px;
+        }
+        .view-container {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        header.main-header { text-align: center; margin-bottom: 40px; }
+        .website-logo { max-height: 80px; margin-bottom: 20px; }
+        .role-selection { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+        .role-card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            width: 280px;
+            padding: 25px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .role-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.12); }
+        .role-card img { height: 70px; margin-bottom: 15px; }
+        .role-card h2 { margin: 10px 0; }
+        .dashboard-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .btn, .link-btn { cursor: pointer; }
+        .link-btn { background: none; border: none; color: var(--primary-color); padding: 0; font-size: 1em; }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .hospital-card, .doctor-card {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 8px;
+            transition: box-shadow 0.2s;
+        }
+        .hospital-card { cursor: pointer; }
+        .hospital-card:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        h1, h2, h3 { margin-top: 0; }
+        .confirm-btn {
+            display: block; width: 100%; padding: 12px; border: none; border-radius: 5px;
+            background-color: #198754; color: white; font-size: 16px; margin-top: 15px;
+        }
+        .confirm-btn:disabled { background-color: var(--secondary-color); cursor: not-allowed; }
+        .form-container { max-width: 400px; margin: auto; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-group input { width: 100%; padding: 10px; border-radius: 5px; border: 1px solid var(--border-color); box-sizing: border-box; }
+        .btn-primary {
+            background-color: var(--primary-color); color: white; border: none;
+            width: 100%; padding: 12px; border-radius: 5px; font-size: 16px;
+        }
+        .auth-switcher { text-align: center; margin-top: 20px; }
+        .error-msg { color: #dc3545; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--border-color); }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div id="role-selection-view">
+            <header class="main-header">
+                <img src="https://imgs.search.brave.com/1j8L8ALhEp98ok-gAp76oT9S8AsRT_8GfQgnajvUo50/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLnBp/bmltZy5jb20vb3Jp/Z2luYWxzL2VlL2U5/LzY2L2VlZTk2NjFj/NzMxM2ViZWU1YWVh/NGFjM2ZlNjZhNWEz/LmpwZw" alt="Website Logo" class="website-logo">
+                <h1>Hospital Management System</h1>
+                <p>Please select your role to continue.</p>
+            </header>
+            <main class="role-selection">
+                <div class="role-card" id="patient-role-btn">
+                    <img src="https://imgs.search.brave.com/L21mysYbuZeJbfX8dL5PPvurLkyXODL_d1vAjRTxx_I/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMTIv/NTc0LzY5NC9zbWFs/bC9wZW9wbGUtbGlu/ZWFyLWljb24tc3F1/YWQtaWxsdXN0cmF0/aW9uLXRlYW0tcGlj/dG9ncmFtLWdyb3Vw/LWxvZ28taWNvbi1p/bGx1c3RyYXRpb24t/dmVjdG9yLmpwZw" alt="Patient Logo">
+                    <h2>I am a Patient</h2>
+                </div>
+                <div class="role-card" id="staff-role-btn">
+                    <img src="https://imgs.search.brave.com/wtuaIYANKoe3zfSONF33kZEWtmQgzFa3jZFArMJKZuI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTIx/ODgzNzAxMi92ZWN0/b3IvdmVjdG9yLWlt/YWdlLW9mLWEtZmxh/dC1pc29sYXRlZC1p/Y29uLWRvY3Rvci1z/aWduLmpwZz9zPTYx/Mng2MTImdz0wJms9/MjAmYz1ZQmlibjdF/b2lnbW8tb3A0cEhV/TDZLd0xJeEw5V29k/b3NCVlpLS3gwOVZB/PQ" alt="Doctor Logo">
+                    <h2>Doctor / Management</h2>
+                </div>
+            </main>
+        </div>
+
+        <div id="auth-view" class="view-container hidden">
+            <div class="dashboard-header">
+                <div></div><button class="link-btn" id="back-to-roles-btn">&larr; Back to Role Selection</button>
+            </div>
+            <div class="form-container">
+                <h2 id="auth-title"></h2>
+                <div id="login-form-container">
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="login-username">Username</label>
+                            <input type="text" id="login-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="login-password">Password</label>
+                            <input type="password" id="login-password" required minlength="8">
+                        </div>
+                        <button type="submit" class="btn-primary">Login</button>
+                        <p id="login-error" class="error-msg"></p>
+                    </form>
+                    <div class="auth-switcher" id="login-switcher">
+                        <button class="link-btn" id="go-to-register-btn">New Patient? Register here.</button>
+                    </div>
+                </div>
+                <div id="register-form-container" class="hidden">
+                    <form id="register-form">
+                        <div class="form-group">
+                            <label for="register-name">Full Name</label>
+                            <input type="text" id="register-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-username">Username</label>
+                            <input type="text" id="register-username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="register-password">Password (min. 8 characters)</label>
+                            <input type="password" id="register-password" required minlength="8">
+                        </div>
+                        <button type="submit" class="btn-primary">Register</button>
+                        <p id="register-error" class="error-msg"></p>
+                    </form>
+                    <div class="auth-switcher">
+                        <button class="link-btn" id="go-to-login-btn">Already have an account? Login.</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="hospital-selection-view" class="view-container hidden">
+             <div class="dashboard-header">
+                <h2 id="hospital-welcome-msg"></h2>
+                <button class="link-btn" id="logout-btn-1">Logout</button>
+            </div>
+            <h3>Please Choose a Hospital</h3>
+            <div id="hospital-list" class="card-grid"></div>
+        </div>
+        
+        <div id="patient-view" class="view-container hidden">
+            <div class="dashboard-header">
+                <div>
+                    <h2 id="doctors-view-title"></h2>
+                    <button class="link-btn" id="back-to-hospitals-btn">&larr; Back to Hospital Selection</button>
+                </div>
+                <button class="link-btn" id="logout-btn-2">Logout</button>
+            </div>
+            <div id="doctor-list" class="card-grid"></div>
+        </div>
+
+        <div id="doctor-dashboard-view" class="view-container hidden">
+            <div class="dashboard-header">
+                <h2 id="doctor-welcome-msg"></h2>
+                <button class="link-btn" id="logout-btn-3">Logout</button>
+            </div>
+            <h3>Your Confirmed Appointments</h3>
+            <table id="doctor-appointment-table"></table>
+        </div>
+        
+        <div id="admin-dashboard-view" class="view-container hidden">
+            <div class="dashboard-header">
+                <h2 id="admin-welcome-msg"></h2>
+                <button class="link-btn" id="logout-btn-4">Logout</button>
+            </div>
+            <h3>All Hospital Appointments</h3>
+            <table id="admin-appointment-table"></table>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentUser = null;
+            let selectedHospital = null;
+            const views = document.querySelectorAll('.view-container, #role-selection-view');
+            const authTitle = document.getElementById('auth-title');
+            const loginContainer = document.getElementById('login-form-container');
+            const registerContainer = document.getElementById('register-form-container');
+            const loginSwitcher = document.getElementById('login-switcher');
+            const showView = (viewId) => {
+                views.forEach(view => view.classList.add('hidden'));
+                document.getElementById(viewId).classList.remove('hidden');
+            };
+            showView('role-selection-view');
+            document.getElementById('patient-role-btn').addEventListener('click', () => {
+                authTitle.textContent = 'Patient Login / Register';
+                loginSwitcher.classList.remove('hidden');
+                showView('auth-view');
+            });
+            document.getElementById('staff-role-btn').addEventListener('click', () => {
+                authTitle.textContent = 'Staff Login';
+                loginSwitcher.classList.add('hidden');
+                registerContainer.classList.add('hidden');
+                loginContainer.classList.remove('hidden');
+                showView('auth-view');
+            });
+            document.getElementById('back-to-roles-btn').addEventListener('click', () => showView('role-selection-view'));
+            document.getElementById('go-to-register-btn').addEventListener('click', () => {
+                loginContainer.classList.add('hidden');
+                registerContainer.classList.remove('hidden');
+            });
+            document.getElementById('go-to-login-btn').addEventListener('click', () => {
+                registerContainer.classList.add('hidden');
+                loginContainer.classList.remove('hidden');
+            });
+            const handleLogout = () => {
+                currentUser = null;
+                selectedHospital = null;
+                showView('role-selection-view');
+            };
+            document.querySelectorAll('.link-btn[id^="logout-btn"]').forEach(btn => btn.addEventListener('click', handleLogout));
+            document.getElementById('back-to-hospitals-btn').addEventListener('click', () => showView('hospital-selection-view'));
+            document.getElementById('login-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = document.getElementById('login-username').value;
+                const password = document.getElementById('login-password').value;
+                const response = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+                const data = await response.json();
+                if (response.ok) { currentUser = data.user; navigateToDashboard(); document.getElementById('login-form').reset(); document.getElementById('login-error').textContent = ''; } else { document.getElementById('login-error').textContent = data.message; }
+            });
+            document.getElementById('register-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const name = document.getElementById('register-name').value;
+                const username = document.getElementById('register-username').value;
+                const password = document.getElementById('register-password').value;
+                const response = await fetch('/api/register', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name, username, password }) });
+                const data = await response.json();
+                if (response.ok) { currentUser = data.user; navigateToDashboard(); document.getElementById('register-form').reset(); document.getElementById('register-error').textContent = ''; } else { document.getElementById('register-error').textContent = data.message; }
+            });
+            const navigateToDashboard = () => {
+                if (!currentUser) return;
+                if (currentUser.role === 'patient') {
+                    showView('hospital-selection-view');
+                    document.getElementById('hospital-welcome-msg').textContent = `Welcome, ${currentUser.name}!`;
+                    renderHospitals();
+                } else if (currentUser.role === 'doctor') {
+                    showView('doctor-dashboard-view');
+                    renderDoctorDashboard();
+                } else if (currentUser.role === 'admin') {
+                    showView('admin-dashboard-view');
+                    renderAdminDashboard();
+                }
+            };
+            async function renderHospitals() {
+                const response = await fetch('/api/hospitals');
+                const hospitals = await response.json();
+                const hospitalListEl = document.getElementById('hospital-list');
+                hospitalListEl.innerHTML = hospitals.map(h => `<div class="hospital-card" data-hospital-id="${h.id}" data-hospital-name="${h.name}"><h3>${h.name}</h3><p>${h.location}</p></div>`).join('');
+            }
+            async function renderDoctors(hospitalId) {
+                const response = await fetch(`/api/doctors?hospitalId=${hospitalId}`);
+                const doctors = await response.json();
+                const doctorListEl = document.getElementById('doctor-list');
+                doctorListEl.innerHTML = doctors.map(doc => `<div class="doctor-card"><h3>${doc.name}</h3><p><strong>Specialty:</strong> ${doc.specialty}</p><p><strong>Timings:</strong> ${doc.timings}</p><button class="confirm-btn" data-doctor-id="${doc.id}" data-timings="${doc.timings}">Confirm Appointment</button></div>`).join('');
+            }
+            async function renderDoctorDashboard() {
+                document.getElementById('doctor-welcome-msg').textContent = `Welcome, ${currentUser.name}`;
+                const response = await fetch(`/api/doctor/appointments?doctorId=${currentUser.id}`);
+                const appointments = await response.json();
+                const tableEl = document.getElementById('doctor-appointment-table');
+                if (appointments.length === 0) {
+                    tableEl.innerHTML = '<thead><tr><th>Patient Name</th><th>Date</th><th>Timings</th></tr></thead><tbody><tr><td colspan="3">No appointments found.</td></tr></tbody>';
+                    return;
+                }
+                tableEl.innerHTML = `<thead><tr><th>Patient Name</th><th>Date</th><th>Timings</th></tr></thead><tbody>${appointments.map(a => `<tr><td>${a.patientName}</td><td>${a.date}</td><td>${a.timings}</td></tr>`).join('')}</tbody>`;
+            }
+            async function renderAdminDashboard() {
+                document.getElementById('admin-welcome-msg').textContent = `Welcome, ${currentUser.name}`;
+                const response = await fetch('/api/admin/all-appointments');
+                const appointments = await response.json();
+                const tableEl = document.getElementById('admin-appointment-table');
+                if (appointments.length === 0) {
+                    tableEl.innerHTML = '<thead><tr><th>Patient</th><th>Doctor</th><th>Hospital</th><th>Timings</th></tr></thead><tbody><tr><td colspan="4">No appointments found.</td></tr></tbody>';
+                    return;
+                }
+                tableEl.innerHTML = `<thead><tr><th>Patient</th><th>Doctor</th><th>Hospital</th><th>Timings</th></tr></thead><tbody>${appointments.map(a => `<tr><td>${a.patientName}</td><td>${a.doctorName}</td><td>${a.hospitalName}</td><td>${a.timings}</td></tr>`).join('')}</tbody>`;
+            }
+            document.getElementById('hospital-list').addEventListener('click', (e) => {
+                const card = e.target.closest('.hospital-card');
+                if (card) {
+                    selectedHospital = { id: parseInt(card.dataset.hospitalId), name: card.dataset.hospitalName };
+                    document.getElementById('doctors-view-title').textContent = `Doctors at ${selectedHospital.name}`;
+                    showView('patient-view');
+                    renderDoctors(selectedHospital.id);
+                }
+            });
+            document.getElementById('doctor-list').addEventListener('click', async (e) => {
+                if (e.target.classList.contains('confirm-btn')) {
+                    if (!currentUser) { alert("Please login to book an appointment."); showView('auth-view'); return; }
+                    const doctorId = parseInt(e.target.dataset.doctorId);
+                    const timings = e.target.dataset.timings;
+                    const response = await fetch('/api/book', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ doctorId, patientId: currentUser.id, patientName: currentUser.name, hospitalId: selectedHospital.id, timings }) });
+                    const data = await response.json();
+                    alert(data.message);
+                    if (response.ok) showView('hospital-selection-view');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
