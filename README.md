@@ -1,6 +1,6 @@
 # MediSync - Hospital Management System
 
-A dynamic, single-page web application for managing hospital appointments, designed with distinct user roles for patients, doctors, and hospital administration. This project demonstrates a full-stack approach using a mock backend powered by **Node.js** and **Express**, with a responsive **vanilla JavaScript** frontend.
+A dynamic, single-page web application for managing hospital appointments, designed with distinct user roles for patients, doctors, and hospital administration. This project demonstrates a full-stack approach using a mock backend powered by **Node.js** and **Express**, with a responsive ** JavaScript** frontend.
 
 ---
 
